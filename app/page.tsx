@@ -3,7 +3,7 @@ import { FaGoogle } from "react-icons/fa";
 
 const Home: React.FC = () => {
   return (
-    <main className="bg-slate-100 h-[100vh] flex justify-center items-center flex-col">
+    <main className="grid-background bg-slate-100 h-[100vh] flex justify-center items-center flex-col">
       <section id="banner" className="flex justify-center items-center">
         <Image
           src="/home-banner.jpg"
