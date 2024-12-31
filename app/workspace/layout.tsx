@@ -1,10 +1,13 @@
 'use client'
 
+import data from '@/data/workspace-data.json'
 import { ReactNode, useEffect, useState } from "react"
 import { LuImport } from "react-icons/lu"
 import { IoSettings, IoSearchSharp } from "react-icons/io5"
 import { SiFiles } from "react-icons/si"
-import { FaSync, FaTrash, FaArrowsAltH} from "react-icons/fa"
+import { CiSquarePlus } from "react-icons/ci";
+import { FaSync, FaTrash } from "react-icons/fa"
+import TreeView from '@/components/TreeView'
 
 interface WorkspaceLayoutProps {
     children: ReactNode
@@ -45,40 +48,39 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
                 style={{ width: `${sideBarWidth}vw` }}
             >
                 <ul className="text-slate-600 font-bold text-sm text-left">
-                    <li className="mt-3 flex items-center">
+                    <li className="mt-3 flex items-center hover:text-slate-800">
                         <IoSearchSharp size={18} />
                         <span className="ml-1 hover:cursor-pointer">Quick Find</span>
                     </li>
-                    <li className="mt-3 flex items-center">
+                    <li className="mt-3 flex items-center hover:text-slate-800">
                         <IoSettings size={18} />
-                        <span className="ml-1">Settings</span>
+                        <span className="ml-1 hover:cursor-pointer">Settings</span>
                     </li>
                     <li className="my-8 flex flex-col">
                         <div className="flex items-center">
                             <LuImport size={18} />
                             <span className="ml-1">Workspace</span>
                         </div>
-                        <div id="workspace-container" className="border bg-white my-3 rounded flex text-sm font-thin text-slave-500 items-center justify-center h-[40vh]">No Data to show</div>
+                        <div id="workspace-container" className="border bg-white my-3 rounded flex flex-col text-[13px] font-thin text-slate-500 items-center h-[40vh]">
+                            {/* <CiSquarePlus size={26} className="hover:cursor-pointer" /> */}
+                            <div className='w-full overflow-auto p-3 tree'><TreeView data={data} /></div>
+                        </div>
                     </li>
-                    <li className="mt-3 flex items-center">
+                    <li className="mt-3 flex items-center hover:text-slate-800">
                         <SiFiles size={18} />
-                        <span className="ml-1">Import Workspace</span>
+                        <span className="ml-1 hover:cursor-pointer">Import Workspace</span>
                     </li>
-                    <li className="mt-3 flex items-center">
+                    <li className="mt-3 flex items-center hover:text-slate-800">
                         <FaSync size={18} />
-                        <span className="ml-1">Trigger Sync</span>
+                        <span className="ml-1 hover:cursor-pointer">Trigger Sync</span>
                     </li>
-                    <li className="mt-3 flex items-center">
+                    <li className="mt-3 flex items-center hover:text-slate-800">
                         <FaTrash size={18} />
-                        <span className="ml-1">Trash</span>
+                        <span className="ml-1 hover:cursor-pointer">Trash</span>
                     </li>
                 </ul>
             </aside>
-            <div
-                className="bg-slate-300 cursor-col-resize w-3" title="Hold and drag to resize the side bar"
-                onMouseDown={handleMouseDown} >
-                <FaArrowsAltH color="gray" />
-            </div>
+            <div className="bg-slate-300 cursor-col-resize w-3" title="Hold and drag to resize the side bar" onMouseDown={handleMouseDown} />
             <main id="main-section">
                 {children}
             </main>

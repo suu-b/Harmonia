@@ -27,3 +27,16 @@ body {
     linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
   background-size: 20px 20px;
 }
+
+.tree::-webkit-scrollbar {
+  width: 10px;
+}
+
+.tree::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+.tree::-webkit-scrollbar-thumb {
+  background: #8ed0fd;
+  border-radius: 5px;
+}
