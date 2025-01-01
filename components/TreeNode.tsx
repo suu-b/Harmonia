@@ -1,4 +1,5 @@
 import { useState } from "react"
+import Link from "next/link"
 import { BiSolidDownArrow, BiSolidRightArrow } from "react-icons/bi"
 
 interface TreeNodeProps {
@@ -18,7 +19,7 @@ const TreeNode = ({ node }: TreeNodeProps) => {
         <div className="ml-5">
             <div className="flex">
                 {hasChildren && <div onClick={() => setIsExpanded(!isExpanded)} className="flex items-center justify-center cursor-pointer">{isExpanded ? <BiSolidDownArrow size={10} /> : <BiSolidRightArrow size={10} />}</div>}
-                <div className="ml-1">{node.name}</div>
+                <Link href={`/workspace/${node.id}`}><div className="ml-1">{node.name}</div></Link>
             </div>
             {isExpanded && hasChildren && (
                 <div>

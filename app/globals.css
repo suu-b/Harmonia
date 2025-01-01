@@ -27,9 +27,19 @@ body {
     linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
   background-size: 20px 20px;
 }
+.tree {
+  direction: rtl; 
+  overflow-y: auto; 
+  scrollbar-gutter: stable both-edges;
+}
+
+.tree > * {
+  direction: ltr; 
+}
 
 .tree::-webkit-scrollbar {
   width: 10px;
+  height: 30px;
 }
 
 .tree::-webkit-scrollbar-track {
@@ -37,6 +47,6 @@ body {
 }
 
 .tree::-webkit-scrollbar-thumb {
-  background: #8ed0fd;
+  background: #696969;
   border-radius: 5px;
 }
