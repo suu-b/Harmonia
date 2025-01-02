@@ -3,7 +3,7 @@ import Image from "next/image"
 const WorkspacePage: React.FC = () => {
     return (
         <div className="h-screen shadow-lg bg-white p-24 ">
-            <section id="worspace-snoopy">
+            <section id="workspace-snoopy">
                 <Image
                     src="/workspace-snoopy.png"
                     alt="home-banner"

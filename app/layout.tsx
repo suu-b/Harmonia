@@ -1,17 +1,15 @@
+"use client";
+
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 import "./globals.css";
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ['400', '500', '700', '900'],
+  weight: ["400", "500", "700", "900"],
   variable: "--font-poppins",
-})
-
-export const metadata: Metadata = {
-  title: "Harmonia",
-  description: "Research. Create. Note. Sync",
-};
+});
 
 export default function RootLayout({
   children,
@@ -20,10 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} ${poppins.variable} antialiased`}
-      >
-        {children}
+      <head>
+        <title>Harmonia</title>
+        <meta name="description" content="Research. Create. Note. Sync" />
+      </head>
+      <body className={`${poppins.variable} antialiased`}>
+        <SessionProvider>{children}</SessionProvider>
       </body>
     </html>
   );
