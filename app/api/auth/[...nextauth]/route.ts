@@ -5,7 +5,12 @@ const handler = NextAuth({
     providers: [
         GoogleProvider({
             clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-            clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET
+            clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+            authorization: {
+                params: {
+                    scope: "openid profile email https://www.googleapis.com/auth/documents https://www.googleapis.com/auth/drive"
+                }
+            }
         })
     ],
     callbacks: {
