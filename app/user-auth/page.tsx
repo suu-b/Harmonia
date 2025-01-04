@@ -3,31 +3,32 @@
 import { BeatLoader } from 'react-spinners'
 import Image from "next/image"
 import { useSession } from "next-auth/react"
-import axios from 'axios'
 import { motion } from "framer-motion"
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 
 const UserAuthPage: React.FC = () => {
     const { data: session, status } = useSession()
+    const router = useRouter()
 
-    const fetchUserDocs = async (accessToken: string) => {
-        try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive`, { accessToken: accessToken })
-            return response.data
-        }
-        catch (e) {
-            console.error("ERROR: Fetching user docs:" + e)
-        }
-    }
+    // const fetchUserDocs = async (accessToken: string) => {
+    //     try {
+    //         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive`, { accessToken: accessToken })
+    //         return response.data
+    //     }
+    //     catch (e) {
+    //         console.error("ERROR: Fetching user docs:" + e)
+    //     }
+    // }
 
     useEffect(() => {
-        if (session?.accessToken) {
-            fetchUserDocs(session.accessToken).then(data => {
-                console.log(data)
-            })
+        if (session?.user) {
+            setTimeout(() => {
+                router.push('workspace')
+            }, 3000)
         }
-    }, [session?.accessToken])
+    }, [session?.user])
 
 
     if (status === "loading") {

@@ -6,7 +6,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Acesss Token is required" }, { status: 400 })
     }
     try {
-        const response = await fetch('https://www.googleapis.com/drive/v3/files', {
+        const response = await fetch('https://www.googleapis.com/drive/v3/files?q=mimeType="application/vnd.google-apps.document"', {
             headers: { Authorization: `Bearer ${accessToken}` }
         })
         const data = await response.json()

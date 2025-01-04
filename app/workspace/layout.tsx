@@ -22,7 +22,7 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
     const handleMouseMove = (e: MouseEvent) => {
         if (isResizing) {
             const newWidth = (e.clientX / window.innerWidth) * 100
-            if (newWidth >= 10 && newWidth <= 40) setSideBarWidth(newWidth)
+            if (newWidth >= 25) setSideBarWidth(newWidth)
         }
     }
     const handleMouseUp = () => setIsResizing(false)
@@ -81,7 +81,7 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
                 </ul>
             </aside>
             <div className="bg-slate-300 cursor-col-resize w-3" title="Hold and drag to resize the side bar" onMouseDown={handleMouseDown} />
-            <main id="main-section">
+            <main id="main-section" style={{ width: `${100 - sideBarWidth}vw` }}>
                 {children}
             </main>
         </div>
