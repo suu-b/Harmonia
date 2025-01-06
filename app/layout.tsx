@@ -1,20 +1,20 @@
-"use client";
+"use client"
 
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
-import { SessionProvider } from "next-auth/react";
-import "./globals.css";
+import { Poppins } from "next/font/google"
+import { SessionProvider } from "next-auth/react"
+import "./globals.css"
+import { AnimatePresence } from "framer-motion"
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
   variable: "--font-poppins",
-});
+})
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en">
@@ -23,8 +23,8 @@ export default function RootLayout({
         <meta name="description" content="Research. Create. Note. Sync" />
       </head>
       <body className={`${poppins.variable} antialiased`}>
-        <SessionProvider>{children}</SessionProvider>
+        <main className="grid-background bg-slate-100 h-[100vh] flex justify-center items-center flex-col"><AnimatePresence mode="wait" initial={false}><SessionProvider>{children}</SessionProvider></AnimatePresence></main>
       </body>
     </html>
-  );
+  )
 }
