@@ -6,13 +6,19 @@ import { BeatLoader } from 'react-spinners'
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
-import { h3 } from "framer-motion/client"
+
+interface GoogleDriveDocument {
+    id: string;
+    kind: string;
+    mimeType: string;
+    name: string;
+}
 
 const QuickFindPage: React.FC = () => {
     const { data: session } = useSession()
-    const [userDocuments, setUserDocuments] = useState(null)
-    const [results, setResults] = useState(null)
-    const [query, setQuery] = useState("")
+    const [userDocuments, setUserDocuments] = useState<GoogleDriveDocument[] | null>(null)
+    const [results, setResults] = useState<GoogleDriveDocument[] | null>(null)
+    const [query, setQuery] = useState<string>("")
 
     const fetchUserDocs = async (accessToken: string) => {
         try {
@@ -30,8 +36,10 @@ const QuickFindPage: React.FC = () => {
     }
 
     const handleSearch = () => {
-        const filtered = userDocuments.filter(item => item.name.toLowerCase().includes(query))
-        setResults(filtered)
+        if (userDocuments) {
+            const filtered = userDocuments.filter((item: GoogleDriveDocument) => item.name.toLowerCase().includes(query))
+            setResults(filtered)
+        }
     }
 
     useEffect(() => {
@@ -63,8 +71,8 @@ const QuickFindPage: React.FC = () => {
                     <ol className="w-full">
                         <h3 className="font-bold text-sm text-slate-800 p-1">Document</h3>
                         <hr className="mb-3" />
-                        {results.length === 0 && <h3 className="w-full text-center text-slate-800 text-sm">No results found</h3>}
-                        {results.map(doc =>
+                        {results && results.length === 0 && <h3 className="w-full text-center text-slate-800 text-sm">No results found</h3>}
+                        {results && results.map(doc =>
                             <div className="w-full" key={doc.id}>
                                 <li className="text-slate-800 text-sm my-2 cursor-pointer hover:bg-slate-200 p-3 rounded pl-1">{doc.name}</li>
                                 <hr />
