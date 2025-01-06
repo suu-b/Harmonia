@@ -1,14 +1,18 @@
 "use client"
 
+import { CiSearch } from "react-icons/ci"
 import Image from "next/image"
 import { BeatLoader } from 'react-spinners'
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
+import { h3 } from "framer-motion/client"
 
 const QuickFindPage: React.FC = () => {
     const { data: session } = useSession()
-    const [userDocuments, setUserDocuments] = useState([])
+    const [userDocuments, setUserDocuments] = useState(null)
+    const [results, setResults] = useState(null)
+    const [query, setQuery] = useState("")
 
     const fetchUserDocs = async (accessToken: string) => {
         try {
@@ -20,10 +24,22 @@ const QuickFindPage: React.FC = () => {
         }
     }
 
+    const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const searchItem = e.target.value.toLowerCase()
+        setQuery(searchItem)
+    }
+
+    const handleSearch = () => {
+        const filtered = userDocuments.filter(item => item.name.toLowerCase().includes(query))
+        setResults(filtered)
+    }
+
     useEffect(() => {
         if (session?.accessToken) {
             fetchUserDocs(session.accessToken).then(data => {
+                console.log(data.files)
                 setUserDocuments(data.files)
+                setResults(data.files)
             })
         }
     }, [session?.accessToken])
@@ -38,15 +54,24 @@ const QuickFindPage: React.FC = () => {
             />
             <h3 className="text-4xl font-bold text-slate-800 my-1">Find your drive documents here</h3>
             <p className="text-sm text-slate-400 mb-5 text-center ">You could search for the documents from the google drive here. You can even import them to your workspace. No need to visit G-drive. Access everything relevant here. Amazing, isn't it?</p>
-            <input type="text" placeholder="Search for your documents here..." className="w-[80%] focus:border-blue-400 focus:ring-0 rounded border shadow bg-slate-100 p-3 text-slate-800" />
-            <div id="drive-docs" className="flex justify-center items-center flex-col gap-4 p-10">
+            <div className="flex justify-center items-center w-[80%]">
+                <input type="text" placeholder="Search for your documents here 🔍..." onChange={handleQueryChange} className="w-full focus:border-blue-400 focus:ring-0 text-sm rounded border shadow bg-slate-100 p-2 text-slate-800" />
+                <CiSearch className="bg-slate-800 p-1 rounded-lg ml-2 cursor-pointer" onClick={handleSearch} size={38} />
+            </div>
+            <div id="drive-docs" className="w-full flex justify-center items-start flex-col gap-4 p-10">
                 {userDocuments ?
-                    <ol>
-                        {userDocuments.map(doc => 
-                            <li className="text-slate-800" key={doc.name}>{doc.name}</li>
+                    <ol className="w-full">
+                        <h3 className="font-bold text-sm text-slate-800 p-1">Document</h3>
+                        <hr className="mb-3" />
+                        {results.length === 0 && <h3 className="w-full text-center text-slate-800 text-sm">No results found</h3>}
+                        {results.map(doc =>
+                            <div className="w-full" key={doc.id}>
+                                <li className="text-slate-800 text-sm my-2 cursor-pointer hover:bg-slate-200 p-3 rounded pl-1">{doc.name}</li>
+                                <hr />
+                            </div>
                         )}
                     </ol>
-                    : <BeatLoader color="#1E293B" size={20} />}
+                    : <BeatLoader color="#1E293B" size={20} className="m-auto" />}
             </div>
         </section>
     )
