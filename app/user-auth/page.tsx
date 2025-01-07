@@ -12,15 +12,6 @@ const UserAuthPage: React.FC = () => {
     const { data: session, status } = useSession()
     const router = useRouter()
 
-    // const fetchUserDocs = async (accessToken: string) => {
-    //     try {
-    //         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive`, { accessToken: accessToken })
-    //         return response.data
-    //     }
-    //     catch (e) {
-    //         console.error("ERROR: Fetching user docs:" + e)
-    //     }
-    // }
 
     useEffect(() => {
         if (session?.user) {

@@ -7,14 +7,18 @@ import { LuImport } from "react-icons/lu"
 import { IoSettings, IoSearchSharp } from "react-icons/io5"
 import { SiFiles } from "react-icons/si"
 import { CiSquarePlus } from "react-icons/ci";
+import axios from 'axios'
 import { FaSync, FaTrash } from "react-icons/fa"
 import TreeView from '@/components/TreeView'
+import NoWorkspace from '@/components/NoWorkspace'
+import { useSession } from 'next-auth/react'
 
 interface WorkspaceLayoutProps {
     children: ReactNode
 }
 
 const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
+    const { data: session } = useSession()
     const [sideBarWidth, setSideBarWidth] = useState(25)
     const [isResizing, setIsResizing] = useState(false)
 
@@ -62,8 +66,9 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
                             <SiFiles size={18} />
                             <Link href="/workspace"><span className="ml-1 hover:cursor-pointer">Workspace</span></Link>
                         </div>
-                        <div id="workspace-container" className="border bg-white my-3 rounded flex flex-col text-[13px] font-thin text-slate-500 items-center h-[40vh]">
-                            {data && data.length > 0 ? <div className='w-full overflow-auto p-3 tree'><TreeView data={data} /> </div> : <div className='w-fit h-fit m-auto flex items-center justify-center flex-col'>< CiSquarePlus size={26} className="hover:cursor-pointer" /> <p>No projects found</p></div>}
+                        <div id="workspace-container" className="border bg-white my-3 rounded flex flex-col text-[13px] font-thin text-slate-500 justify-center items-center h-[40vh]">
+                            <NoWorkspace accessToken={session?.accessToken}/>
+                            {/* {data && data.length > 0 ? <div className='w-full overflow-auto p-3 tree'><TreeView data={data} /> </div> : <div className='w-fit h-fit m-auto flex items-center justify-center flex-col'>< CiSquarePlus size={26} className="hover:cursor-pointer" /> <p>No projects found</p></div>} */}
                         </div>
                     </li>
                     <li className="mt-3 flex items-center hover:text-slate-800">
