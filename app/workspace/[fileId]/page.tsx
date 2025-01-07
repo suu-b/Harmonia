@@ -1,19 +1,18 @@
-import { use } from 'react';
+import { use } from 'react'
 
 interface FilePageProps {
-  params: Promise<{ fileId: string }>; // Note that params is now a Promise
+  params: Promise<{ fileId: string }> 
 }
 
 const FilePage = ({ params }: FilePageProps) => {
-  // Unwrap the params using `use()`
-  const { fileId } = use(params);
+  const { fileId } = use(params)
 
   return (
     <div className='text-slate-900'>
       <h1>Dynamic File Page</h1>
       <p>This is the content for file: {fileId}</p>
     </div>
-  );
-};
+  )
+}
 
-export default FilePage;
+export default FilePage
