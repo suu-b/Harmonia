@@ -1,6 +1,10 @@
+import ImportWorkSpaceModal from "@/components/ImportWorkspaceModal"
+
 const ImportWorkSpacePage: React.FC = () => {
-    return(
-        <>This is import workspace</>
+    return (
+        <>
+            <ImportWorkSpaceModal />
+        </>
     )
 }
 
