@@ -39,7 +39,7 @@ const ImportWorkSpaceModal: React.FC<ImportWorkSpaceModalProps> = ({ accessToken
             >
                 Open Modal
             </button>
-            <Modal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)}>
+            <Modal isOpen={isOpen} importDone = {importDone} onClose={() => importDone && setIsOpen(!isOpen)}>
                 <Image
                     src="/importing-snoopy.png"
                     alt="import-workspace"
@@ -48,11 +48,13 @@ const ImportWorkSpaceModal: React.FC<ImportWorkSpaceModalProps> = ({ accessToken
                 />
                 {importDone ?
                     <>
-                        <h3 className="text-slate-700 font-bold mt-5 text-base my-3">Importing Successfull!</h3>
-                        <FaRegCheckCircle />
+                        <h3 className="text-slate-700 font-bold mt-5 text-base">Importing Successfull.</h3>
+                        <p className="text-slate-500 text-sm my-1 text-center">Now, you would find your workspace setup in the workspace section. Click anywhere in background to continue. Merry writing...</p>
+                        <FaRegCheckCircle color= "black" size={40} className="mt-5"/>
                     </> :
                     <>
                         <h3 className="text-slate-700 font-bold mt-5 text-base my-3">Importing Workspace...</h3>
+                        <p className="text-slate-500 text-sm my-1 text-center">The process is undoabale. Do not close screen or attempt to close the popup.</p>
                         <BarLoader width={200} height={5} />
                     </>}
             </Modal>

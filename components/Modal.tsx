@@ -2,11 +2,12 @@ import { ReactNode } from "react"
 
 interface ModalProps {
     isOpen: boolean
+    importDone: boolean
     onClose: () => void
     children: ReactNode
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, importDone, onClose, children }) => {
     if (!isOpen) return null
 
     return (
@@ -18,7 +19,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 
             <section
                 id="modal"
-                className="w-[40vw] h-[50vh] relative p-8 bg-white rounded-lg shadow-lg border flex flex-col items-center justify-center"
+                className="w-[40vw] relative p-8 bg-white rounded-lg shadow-lg border flex flex-col items-center justify-center"
             >
                 {/**Not be keeping the button to close since importing is a irreversible thing. But still, keeping it for reference */}
                 {/* <button
