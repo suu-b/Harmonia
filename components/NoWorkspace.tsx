@@ -1,10 +1,10 @@
 import { MdOutlineCreateNewFolder } from "react-icons/md"
 import axios from 'axios'
-import { useState } from "react";
-import { MoonLoader } from "react-spinners";
+import { useState } from "react"
+import { MoonLoader } from "react-spinners"
 
 interface NoWorkspaceProps {
-    accessToken: string;
+    accessToken: string | null
 }
 
 const NoWorkspace: React.FC<NoWorkspaceProps> = ({ accessToken }) => {

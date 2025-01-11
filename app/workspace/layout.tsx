@@ -1,24 +1,30 @@
 'use client'
 
-import data from '@/data/workspace-data.json'
 import Link from 'next/link'
 import { ReactNode, useEffect, useState } from "react"
 import { LuImport } from "react-icons/lu"
 import { IoSettings, IoSearchSharp } from "react-icons/io5"
 import { SiFiles } from "react-icons/si"
-import { CiSquarePlus } from "react-icons/ci";
-import axios from 'axios'
 import { FaSync, FaTrash } from "react-icons/fa"
 import TreeView from '@/components/TreeView'
 import NoWorkspace from '@/components/NoWorkspace'
 import { useSession } from 'next-auth/react'
+import getCookie from '@/utils/getCookie'
+import WorkspaceTree from '@/components/WorkspaceTree'
 
 interface WorkspaceLayoutProps {
     children: ReactNode
 }
 
 const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
-    const { data: session } = useSession()
+    const [workspaceId, setWorkspaceId] = useState<string | null>(null)
+    const [accessToken, setAccessToken] = useState<string | null>(null)
+
+    useEffect(() => {
+        setAccessToken(getCookie("accessToken"))
+        setWorkspaceId(getCookie("workspace_id"))
+    }, [workspaceId])
+
     const [sideBarWidth, setSideBarWidth] = useState(25)
     const [isResizing, setIsResizing] = useState(false)
 
@@ -36,13 +42,13 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
             window.addEventListener("mousemove", handleMouseMove)
             window.addEventListener("mouseup", handleMouseUp)
         } else {
-            window.removeEventListener("mousemove", handleMouseMove);
-            window.removeEventListener("mouseup", handleMouseUp);
+            window.removeEventListener("mousemove", handleMouseMove)
+            window.removeEventListener("mouseup", handleMouseUp)
         }
         return () => {
-            window.removeEventListener("mousemove", handleMouseMove);
-            window.removeEventListener("mouseup", handleMouseUp);
-        };
+            window.removeEventListener("mousemove", handleMouseMove)
+            window.removeEventListener("mouseup", handleMouseUp)
+        }
     }, [isResizing])
 
     return (
@@ -67,8 +73,11 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
                             <Link href="/workspace"><span className="ml-1 hover:cursor-pointer">Workspace</span></Link>
                         </div>
                         <div id="workspace-container" className="border bg-white my-3 rounded flex flex-col text-[13px] font-thin text-slate-500 justify-center items-center h-[40vh]">
-                            <NoWorkspace accessToken={session?.accessToken}/>
-                            {/* {data && data.length > 0 ? <div className='w-full overflow-auto p-3 tree'><TreeView data={data} /> </div> : <div className='w-fit h-fit m-auto flex items-center justify-center flex-col'>< CiSquarePlus size={26} className="hover:cursor-pointer" /> <p>No projects found</p></div>} */}
+                            {workspaceId ?
+                                <WorkspaceTree accessToken={accessToken} cookieValue={workspaceId} />
+                                :
+                                <NoWorkspace accessToken={accessToken} />
+                            }
                         </div>
                     </li>
                     <li className="mt-3 flex items-center hover:text-slate-800">

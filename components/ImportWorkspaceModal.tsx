@@ -6,11 +6,11 @@ import Modal from './Modal'
 import axios from "axios"
 import { FaRegCheckCircle } from "react-icons/fa"
 import { BarLoader } from "react-spinners"
+import setCookie from "@/utils/setCookie"
 
 interface ImportWorkSpaceModalProps {
     accessToken: string;
 }
-
 
 const ImportWorkSpaceModal: React.FC<ImportWorkSpaceModalProps> = ({ accessToken }) => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -20,6 +20,8 @@ const ImportWorkSpaceModal: React.FC<ImportWorkSpaceModalProps> = ({ accessToken
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/import-workspace`, { accessToken: accessToken, folderName: "harmonia-workspace" })
             console.log(response.data)
+            const workspace_id = response.data[0].id
+            setCookie({ cookieName: "workspace_id", cookieVal: workspace_id, expiryDays: 5 })
             isImportDone(true)
         }
         catch (e) {
@@ -39,7 +41,7 @@ const ImportWorkSpaceModal: React.FC<ImportWorkSpaceModalProps> = ({ accessToken
             >
                 Open Modal
             </button>
-            <Modal isOpen={isOpen} importDone = {importDone} onClose={() => importDone && setIsOpen(!isOpen)}>
+            <Modal isOpen={isOpen} importDone={importDone} onClose={() => importDone && setIsOpen(!isOpen)}>
                 <Image
                     src="/importing-snoopy.png"
                     alt="import-workspace"
@@ -50,7 +52,7 @@ const ImportWorkSpaceModal: React.FC<ImportWorkSpaceModalProps> = ({ accessToken
                     <>
                         <h3 className="text-slate-700 font-bold mt-5 text-base">Importing Successfull.</h3>
                         <p className="text-slate-500 text-sm my-1 text-center">Now, you would find your workspace setup in the workspace section. Click anywhere in background to continue. Merry writing...</p>
-                        <FaRegCheckCircle color= "black" size={40} className="mt-5"/>
+                        <FaRegCheckCircle color="black" size={40} className="mt-5" />
                     </> :
                     <>
                         <h3 className="text-slate-700 font-bold mt-5 text-base my-3">Importing Workspace...</h3>

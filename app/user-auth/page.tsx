@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react"
 import { motion } from "framer-motion"
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import setCookie from '@/utils/setCookie'
 
 
 const UserAuthPage: React.FC = () => {
@@ -15,6 +16,9 @@ const UserAuthPage: React.FC = () => {
 
     useEffect(() => {
         if (session?.user) {
+            if (session?.accessToken) {
+                setCookie({ cookieName: "accessToken", cookieVal: session?.accessToken, expiryDays: 0.04 })
+            }
             setTimeout(() => {
                 router.push('workspace')
             }, 3000)

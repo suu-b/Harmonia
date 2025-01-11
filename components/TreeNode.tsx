@@ -3,12 +3,7 @@ import Link from "next/link"
 import { BiSolidDownArrow, BiSolidRightArrow } from "react-icons/bi"
 
 interface TreeNodeProps {
-    node: TreeNode
-}
-interface TreeNode {
-    id: string,
-    name: string,
-    children?: TreeNode[]
+    node: FinalDataTreeStructure
 }
 
 const TreeNode = ({ node }: TreeNodeProps) => {

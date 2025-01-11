@@ -1,47 +1,23 @@
-[
+  [
     {
-      "id": "1",
-      "name": "Project A",
-      "children": [
-        {
-          "id": "1.1",
-          "name": "Package A1",
-          "children": [
-            { "id": "1.1.1", "name": "File A1" },
-            { "id": "1.1.2", "name": "File A2" }
-          ]
-        },
-        {
-          "id": "1.2",
-          "name": "Package A2",
-          "children": [
-            { "id": "1.2.1", "name": "File B1" },
-            { "id": "1.2.2", "name": "File B2" }
-          ]
-        }
+      "id": "1.1",
+      "name": "Package A1",
+      "parents": [
+        "2asd34-56e4rr7-89ery6"
       ]
     },
     {
-      "id": "2",
-      "name": "Project B",
-      "children": [
-        {
-          "id": "2.1",
-          "name": "Package B1",
-          "children": [
-            { "id": "2.1.1", "name": "File C1" },
-            { "id": "2.1.2", "name": "File C2" }
-          ]
-        },
-        {
-          "id": "2.2",
-          "name": "Package B2",
-          "children": [
-            { "id": "2.2.1", "name": "File D1" },
-            { "id": "2.2.2", "name": "File D2" }
-          ]
-        }
+      "id": "1.2",
+      "name": "Package A2",
+      "parents": [
+        "2asd34-56e4rr7-89ery6"
+      ]
+    },
+    {
+      "id": "1.3",
+      "name": "Package A3",
+      "parents": [
+        "2asd34-56e4rr7-89ery6"
       ]
     }
   ]
-  
