@@ -6,24 +6,19 @@ import { useSession } from "next-auth/react"
 import { motion } from "framer-motion"
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import setCookie from '@/utils/setCookie'
 
 
 const UserAuthPage: React.FC = () => {
     const { data: session, status } = useSession()
     const router = useRouter()
 
-    // const fetchUserDocs = async (accessToken: string) => {
-    //     try {
-    //         const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive`, { accessToken: accessToken })
-    //         return response.data
-    //     }
-    //     catch (e) {
-    //         console.error("ERROR: Fetching user docs:" + e)
-    //     }
-    // }
 
     useEffect(() => {
         if (session?.user) {
+            if (session?.accessToken) {
+                setCookie({ cookieName: "accessToken", cookieVal: session?.accessToken, expiryDays: 0.04 })
+            }
             setTimeout(() => {
                 router.push('workspace')
             }, 3000)

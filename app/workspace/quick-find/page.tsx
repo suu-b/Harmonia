@@ -22,7 +22,7 @@ const QuickFindPage: React.FC = () => {
 
     const fetchUserDocs = async (accessToken: string) => {
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive`, { accessToken: accessToken })
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/all-files`, { accessToken: accessToken })
             return response.data
         }
         catch (e) {

@@ -1,7 +1,7 @@
 import TreeNode from "./TreeNode";
 
 interface TreeViewProps {
-    data: TreeNode[]
+    data: FinalDataTreeStructure[]
 }
 
 const TreeView = ({ data }: TreeViewProps) => {

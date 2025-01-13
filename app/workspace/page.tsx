@@ -12,8 +12,8 @@ const WorkspacePage: React.FC = () => {
                 />
             </section>
             <h1 className="font-black text-slate-900 text-6xl">Hello <span className="text-blue-300">Shubham</span>!</h1>
-            <p className="text-slate-600 text-base text-left w-[60%] mt-1">Your workspace is ready. Find your repositories listed in your workspace. You can always create new projects. For manual sync with google drive find the link in bottom-left. <br/><br/>
-            <span className="font-semibold">Cheers!</span></p>
+            <p className="text-slate-600 text-base text-left w-[60%] mt-1">Your workspace is ready. Find your repositories listed in your workspace. You can always create new projects. For manual sync with google drive find the link in bottom-left. <br /><br />
+                <span className="font-semibold">Cheers!</span></p>
         </div>
     )
 }
