@@ -72,11 +72,11 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
                             <SiFiles size={18} />
                             <Link href="/workspace"><span className="ml-1 hover:cursor-pointer">Workspace</span></Link>
                         </div>
-                        <div id="workspace-container" className="border bg-white my-3 rounded flex flex-col text-[13px] font-thin text-slate-500 justify-center items-center h-[40vh]">
+                        <div id="workspace-container" className="border bg-white my-3 rounded text-[13px] font-thin text-slate-500 h-[40vh]">
                             {workspaceId ?
-                                <WorkspaceTree accessToken={accessToken} cookieValue={workspaceId} />
+                                <div className=' flex flex-col justify-start items-center w-full h-full'><WorkspaceTree accessToken={accessToken} cookieValue={workspaceId} /></div>
                                 :
-                                <NoWorkspace accessToken={accessToken} />
+                                <div className=' flex flex-col justify-center items-center w-full h-full '><NoWorkspace accessToken={accessToken} /></div>
                             }
                         </div>
                     </li>

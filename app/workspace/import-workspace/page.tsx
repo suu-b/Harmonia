@@ -1,17 +1,18 @@
 "use client"
 
 import ImportWorkSpaceModal from "@/components/ImportWorkspaceModal"
+import getCookie from "@/utils/getCookie"
 import { useSession } from "next-auth/react"
 
 const ImportWorkSpacePage: React.FC = () => {
-    const { data: session } = useSession()
-    if (!session?.accessToken) {
+    const accessToken = getCookie("accessToken")
+    if (!accessToken) {
         return <p>Loading...</p>; 
     }
 
     return (
         <>
-            <ImportWorkSpaceModal accessToken={session.accessToken} />
+            <ImportWorkSpaceModal accessToken={accessToken} />
         </>
     )
 }
