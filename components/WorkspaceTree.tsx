@@ -25,7 +25,6 @@ const WorkspaceTree: React.FC<NoWorkspaceProps> = ({ accessToken, cookieValue })
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/get-folder`, {
                 accessToken: accessToken, folderID: cookieValue
             })
-            console.log(response.data)
             const formattedResponse: FinalDataTreeStructure[] = await formatWorkspaceUtils(response.data.files)
             setData(formattedResponse)
         }
@@ -35,7 +34,7 @@ const WorkspaceTree: React.FC<NoWorkspaceProps> = ({ accessToken, cookieValue })
     }
 
     return (
-        <div className='w-full overflow-auto p-3 tree'>{data ? <TreeView data={data} /> : <MoonLoader />} </div>
+        <div className='w-full overflow-auto p-3 pt-8 tree'>{data ? <TreeView data={data} /> : <MoonLoader />} </div>
     )
 }
 
