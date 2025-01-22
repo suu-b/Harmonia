@@ -6,11 +6,13 @@ import { LuImport } from "react-icons/lu"
 import { IoSettings, IoSearchSharp } from "react-icons/io5"
 import { SiFiles } from "react-icons/si"
 import { FaSync, FaTrash } from "react-icons/fa"
-import TreeView from '@/components/TreeView'
-import NoWorkspace from '@/components/NoWorkspace'
-import { useSession } from 'next-auth/react'
+import formatWorkspaceUtils from '@/utils/formatWorkspaceUtils'
+import axios from 'axios'
+import NoWorkspace from '@/components/workspace/fallbacks/NoWorkspace'
 import getCookie from '@/utils/getCookie'
-import WorkspaceTree from '@/components/WorkspaceTree'
+import WorkspaceTree from '@/components/workspace/workspace-tree/WorkspaceTree'
+import WorkspaceEmpty from '@/components/workspace/fallbacks/EmptyWorkspace'
+import { MoonLoader } from 'react-spinners'
 
 interface WorkspaceLayoutProps {
     children: ReactNode
@@ -19,11 +21,28 @@ interface WorkspaceLayoutProps {
 const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
     const [workspaceId, setWorkspaceId] = useState<string | null>(null)
     const [accessToken, setAccessToken] = useState<string | null>(null)
+    const [data, setData] = useState<FinalDataTreeStructure[] | null>(null)
 
     useEffect(() => {
         setAccessToken(getCookie("accessToken"))
         setWorkspaceId(getCookie("workspace_id"))
-    }, [workspaceId])
+    }, [])
+
+    useEffect(() => {
+        const handleGetWorkspace = async () => {
+            try {
+                const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/get-folder`, {
+                    accessToken: accessToken, folderID: workspaceId
+                })
+                const formattedResponse: FinalDataTreeStructure[] = await formatWorkspaceUtils(response.data.files)
+                setData(formattedResponse)
+            }
+            catch (e) {
+                console.error("ERROR: Fetching user docs:" + e)
+            }
+        }
+        if (workspaceId) handleGetWorkspace()
+    }, [workspaceId, accessToken])
 
     const [sideBarWidth, setSideBarWidth] = useState(25)
     const [isResizing, setIsResizing] = useState(false)
@@ -36,6 +55,7 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
         }
     }
     const handleMouseUp = () => setIsResizing(false)
+
 
     useEffect(() => {
         if (isResizing) {
@@ -72,12 +92,26 @@ const WorkspaceLayout = ({ children, }: WorkspaceLayoutProps) => {
                             <SiFiles size={18} />
                             <Link href="/workspace"><span className="ml-1 hover:cursor-pointer">Workspace</span></Link>
                         </div>
-                        <div id="workspace-container" className="border bg-white my-3 rounded text-[13px] font-thin text-slate-500 h-[40vh]">
-                            {workspaceId ?
-                                <div className=' flex flex-col justify-start items-center w-full h-full'><WorkspaceTree accessToken={accessToken} cookieValue={workspaceId} /></div>
-                                :
-                                <div className=' flex flex-col justify-center items-center w-full h-full '><NoWorkspace accessToken={accessToken} /></div>
-                            }
+                        <div id="workspace-container" className="border bg-white my-3 rounded flex flex-col justify-center items-center text-[13px] font-thin text-slate-500 h-[40vh]">
+                            {workspaceId ? (
+                                data ? (
+                                    data.length > 0 ? (
+                                        <div className="w-full h-full flex items-start">
+                                            <WorkspaceTree data={data} />
+                                        </div>
+                                    ) : (
+                                        <WorkspaceEmpty />
+                                    )
+
+                                ) : (
+                                    <MoonLoader size={20} />
+                                )
+                            ) : (
+                                <div className="flex flex-col justify-center items-center w-full h-full">
+                                    <NoWorkspace accessToken={accessToken} />
+                                </div>
+                            )}
+
                         </div>
                     </li>
                     <li className="mt-3 flex items-center hover:text-slate-800">

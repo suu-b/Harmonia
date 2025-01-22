@@ -56,7 +56,7 @@ const QuickFindPage: React.FC = () => {
         <section id="quickfind" className="flex flex-col justify-center h-screen bg-white items-center w-full p-8">
             <Image
                 src="/detective-snoopy.png"
-                alt="home-banner"
+                alt="quick-find-banner"
                 width={200}
                 height={200}
             />
