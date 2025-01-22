@@ -2,7 +2,6 @@
 
 import ImportWorkSpaceModal from "@/components/ImportWorkspaceModal"
 import getCookie from "@/utils/getCookie"
-import { useSession } from "next-auth/react"
 
 const ImportWorkSpacePage: React.FC = () => {
     const accessToken = getCookie("accessToken")

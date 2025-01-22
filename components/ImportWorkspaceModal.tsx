@@ -34,12 +34,20 @@ const ImportWorkSpaceModal: React.FC<ImportWorkSpaceModalProps> = ({ accessToken
     }, [])
 
     return (
-        <>
+        <section id="import-workspace" className="flex flex-col justify-center h-screen bg-white items-center w-full p-8">
+            <Image
+                src="/importing-snoopy.png"
+                alt="import-banner"
+                width={200}
+                height={200}
+            />
+            <h3 className="text-4xl font-bold text-slate-800 my-1">Let's import your workspace</h3>
+            <p className="text-sm text-slate-400 mb-5 text-center ">Harmonia would try to fetch the workspace from your drive. It can either be first time or a whole merging process to up-to-date the application with the latest changes in the workspace.</p>
             <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 onClick={() => setIsOpen(true)}
             >
-                Open Modal
+                Trigger Import
             </button>
             <Modal isOpen={isOpen} importDone={importDone} onClose={() => importDone && setIsOpen(!isOpen)}>
                 <Image
@@ -60,7 +68,7 @@ const ImportWorkSpaceModal: React.FC<ImportWorkSpaceModalProps> = ({ accessToken
                         <BarLoader width={200} height={5} />
                     </>}
             </Modal>
-        </>
+        </section>
 
     )
 }

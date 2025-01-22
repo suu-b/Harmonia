@@ -2,6 +2,7 @@ import { MdOutlineCreateNewFolder } from "react-icons/md"
 import axios from 'axios'
 import { useState } from "react"
 import { MoonLoader } from "react-spinners"
+import Link from "next/link"
 
 interface NoWorkspaceProps {
     accessToken: string | null
@@ -27,8 +28,8 @@ const NoWorkspace: React.FC<NoWorkspaceProps> = ({ accessToken }) => {
     }
 
     return (
-        <div className="text-slate-600 text-sm font-semibold flex justify-center items-center flex-col">
-            <h3 className="text-center">No Workspace found. Lets make one 🤩!</h3>
+        <div className="text-slate-600 text-sm flex justify-center items-center flex-col">
+            <h3 className="text-center">No Workspace found. Lets make one 🤩! Follow the steps <Link href="/help/no-workpace" target="_blank" className="underline cursor-pointer">here</Link></h3>
             {isLoading ? <MoonLoader size={25} className="m-1.5"/>: <button className="bg-slate-600 p-2 rounded mt-3 hover:shadow" onClick={handleWorkspaceCreation}><MdOutlineCreateNewFolder size={15} color="white" /></button> }
         </div>
     )
