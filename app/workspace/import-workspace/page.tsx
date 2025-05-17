@@ -5,6 +5,7 @@ import getCookie from "@/utils/getCookie"
 
 const ImportWorkSpacePage: React.FC = () => {
     const accessToken = getCookie("accessToken")
+    
     if (!accessToken) {
         return <p>Loading...</p>; 
     }

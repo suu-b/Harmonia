@@ -1,88 +1,85 @@
-"use client"
+"use client";
 
-import { CiSearch } from "react-icons/ci"
-import Image from "next/image"
-import { BeatLoader } from 'react-spinners'
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
+import { CiSearch } from "react-icons/ci";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
-interface GoogleDriveDocument {
-    id: string;
-    kind: string;
-    mimeType: string;
-    name: string;
-}
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+
+import { GoogleDriveDocument } from "@/types/google-drive-document";
+import { fetchUserDocumentsFromGDrive } from "@/lib/googleDrive";
+import DocumentList from "./components/DocumentList";
 
 const QuickFindPage: React.FC = () => {
-    const { data: session } = useSession()
-    const [userDocuments, setUserDocuments] = useState<GoogleDriveDocument[] | null>(null)
-    const [results, setResults] = useState<GoogleDriveDocument[] | null>(null)
-    const [query, setQuery] = useState<string>("")
+  const { data: session } = useSession();
+  const [userDocuments, setUserDocuments] = useState<
+    GoogleDriveDocument[] | null
+  >(null);
+  const [results, setResults] = useState<GoogleDriveDocument[] | null>(null);
+  const [query, setQuery] = useState<string>("");
 
-    const fetchUserDocs = async (accessToken: string) => {
-        try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/all-files`, { accessToken: accessToken })
-            return response.data
-        }
-        catch (e) {
-            console.error("ERROR: Fetching user docs:" + e)
-        }
+  useEffect(() => {
+    if (session?.accessToken) {
+      fetchUserDocumentsFromGDrive(session.accessToken).then((data) => {
+        setUserDocuments(data.files);
+        setResults(data.files);
+      });
     }
+  }, [session?.accessToken]);
 
-    const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const searchItem = e.target.value.toLowerCase()
-        setQuery(searchItem)
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchItem = e.target.value.toLowerCase();
+    setQuery(searchItem);
+  };
+
+  const handleSearch = () => {
+    if (userDocuments) {
+      const filtered = userDocuments.filter((item: GoogleDriveDocument) =>
+        item.name.toLowerCase().includes(query)
+      );
+      setResults(filtered);
     }
+  };
 
-    const handleSearch = () => {
-        if (userDocuments) {
-            const filtered = userDocuments.filter((item: GoogleDriveDocument) => item.name.toLowerCase().includes(query))
-            setResults(filtered)
-        }
-    }
+  return (
+    <section
+      id="quickfind"
+      className="flex flex-col items-center justify-center h-screen w-full p-8 bg-white"
+    >
+      <Image
+        src="/detective-snoopy.png"
+        alt="quick-find-banner"
+        width={200}
+        height={200}
+      />
+      <h3 className="text-4xl font-bold text-slate-800 my-2 text-center">
+        Find your drive documents here
+      </h3>
+      <p className="text-sm text-muted-foreground mb-6 max-w-xl text-center">
+        You could search for documents from Google Drive here. You can even
+        import them into your workspace. No need to visit Drive—access
+        everything relevant here. Amazing, isn't it?
+      </p>
 
-    useEffect(() => {
-        if (session?.accessToken) {
-            fetchUserDocs(session.accessToken).then(data => {
-                console.log(data.files)
-                setUserDocuments(data.files)
-                setResults(data.files)
-            })
-        }
-    }, [session?.accessToken])
+      <div className="flex w-full max-w-2xl items-center space-x-2 mb-10">
+        <Input
+          placeholder="Search for your documents here 🔍..."
+          onChange={handleQueryChange}
+          className="text-sm"
+        />
+        <Button variant="default" size="icon" onClick={handleSearch}>
+          <CiSearch className="h-5 w-5" />
+        </Button>
+      </div>
 
-    return (
-        <section id="quickfind" className="flex flex-col justify-center h-screen bg-white items-center w-full p-8">
-            <Image
-                src="/detective-snoopy.png"
-                alt="quick-find-banner"
-                width={200}
-                height={200}
-            />
-            <h3 className="text-4xl font-bold text-slate-800 my-1">Find your drive documents here</h3>
-            <p className="text-sm text-slate-400 mb-5 text-center ">You could search for the documents from the google drive here. You can even import them to your workspace. No need to visit G-drive. Access everything relevant here. Amazing, isn't it?</p>
-            <div className="flex justify-center items-center w-[80%]">
-                <input type="text" placeholder="Search for your documents here 🔍..." onChange={handleQueryChange} className="w-full focus:border-blue-400 focus:ring-0 text-sm rounded border shadow bg-slate-100 p-2 text-slate-800" />
-                <CiSearch className="bg-slate-800 p-1 rounded-lg ml-2 cursor-pointer" onClick={handleSearch} size={38} />
-            </div>
-            <div id="drive-docs" className="w-full flex justify-center items-start flex-col gap-4 p-10">
-                {userDocuments ?
-                    <ol className="w-full">
-                        <h3 className="font-bold text-sm text-slate-800 p-1">Document</h3>
-                        <hr className="mb-3" />
-                        {results && results.length === 0 && <h3 className="w-full text-center text-slate-800 text-sm">No results found</h3>}
-                        {results && results.map(doc =>
-                            <div className="w-full" key={doc.id}>
-                                <li className="text-slate-800 text-sm my-2 cursor-pointer hover:bg-slate-200 p-3 rounded pl-1">{doc.name}</li>
-                                <hr />
-                            </div>
-                        )}
-                    </ol>
-                    : <BeatLoader color="#1E293B" size={20} className="m-auto" />}
-            </div>
-        </section>
-    )
-}
+      <ScrollArea className="w-full max-w-3xl h-[40vh] px-2">
+        <DocumentList resultDocuments={results} />
+      </ScrollArea>
+    </section>
+  );
+};
 
-export default QuickFindPage
+export default QuickFindPage;
