@@ -1,3 +1,4 @@
+import View from "../components/text-editor/View";
 import { use } from "react";
 
 interface FilePageProps {
@@ -15,6 +16,7 @@ const FilePage = ({ params }: FilePageProps) => {
     <div className="text-slate-900">
       <h1>Dynamic File Page</h1>
       <p>This is the content for file: {fileId}</p>
+      <View />
     </div>
   );
 };
