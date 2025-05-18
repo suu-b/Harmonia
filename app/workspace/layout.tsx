@@ -11,8 +11,8 @@ import NoWorkspace from "./components/fallbacks/NoWorkspace";
 import WorkspaceTree from "./components/workspace-tree/WorkspaceTree";
 import WorkspaceEmpty from "./components/fallbacks/EmptyWorkspace";
 import { Button } from "@/components/ui/button";
-import formatWorkspaceUtils from "@/utils/formatWorkspaceUtils";
-import getCookie from "@/utils/getCookie";
+import returnWorkspaceDataInRequiredFormat from "@/lib/formatWorkspace";
+import getCookie from "@/lib/cookies/getCookie";
 import { MoonLoader } from "react-spinners";
 
 import { ScrollArea } from "@radix-ui/react-scroll-area";
@@ -23,6 +23,17 @@ interface WorkspaceLayoutProps {
   children: ReactNode;
 }
 
+/**
+ * WorkspaceLayout component that serves as a layout for the workspace section of the application.
+ * It includes a sidebar with navigation links and a main content area.
+ * The sidebar contains links to different sections of the workspace, such as Quick Find, Settings, and Import Workspace.
+ * The main content area displays the children passed to the component.
+ * The sidebar can be resized by dragging the divider between the sidebar and the main content area.
+ * The component also fetches the user's workspace data from Google Drive and displays it in the sidebar.
+ * The sidebar width is adjustable, and the component handles the resizing logic.
+ * @param param0
+ * @returns
+ */
 const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
   const [workspaceId, setWorkspaceId] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -42,7 +53,7 @@ const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
     ) => {
       fetchFolderById(accessToken, workspaceId).then(async (response) => {
         const formattedResponse: FinalDataTreeStructure[] =
-          await formatWorkspaceUtils(response.files);
+          await returnWorkspaceDataInRequiredFormat(response.files);
         console.log("Formatted response: ", formattedResponse);
         setData(formattedResponse);
       });

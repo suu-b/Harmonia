@@ -13,6 +13,12 @@ import { GoogleDriveDocument } from "@/types/google-drive-document";
 import { fetchUserDocumentsFromGDrive } from "@/lib/googleDrive";
 import DocumentList from "./components/DocumentList";
 
+/**
+ * Component to display the Quick Find page.
+ * It allows users to search for their Google Drive documents.
+ * The component fetches the user's documents from Google Drive using the access token.
+ * It displays a search input and a list of documents that match the search query.
+ */
 const QuickFindPage: React.FC = () => {
   const { data: session } = useSession();
   const [userDocuments, setUserDocuments] = useState<

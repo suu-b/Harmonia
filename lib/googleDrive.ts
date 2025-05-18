@@ -43,7 +43,6 @@ export const fetchFolderById = async (accessToken: string, folderID: string) => 
  */    
 export const createFolder = async (accessToken: string, folderName: string) => {
       try {
-        console.log("Lets see")
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/create-folder`,
           {
@@ -54,9 +53,51 @@ export const createFolder = async (accessToken: string, folderName: string) => {
           },
           }
         );
-        console.log("We saw")
         return response.data;
       } catch (e) {
         console.error(`ERROR: Creating folder of name: ${folderName}:` + e);
       }
     };
+
+/**
+ * Imports a folder into the user's Google Drive.
+ * @param accessToken - The access token of the user
+ * @param folderName - The name of the folder to import
+ * @returns 
+ */
+ export const importFolder = async (accessToken: string, folderName: string) => {
+  try{
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/import-workspace`,
+      {
+        accessToken: accessToken,
+        folderName: folderName,
+      }
+    );
+    return response.data;
+     } catch (e) {
+        console.error(`ERROR: Importing folder of name: ${folderName}` + e)
+     }
+ }   
+
+
+ /**
+  * Gets a file by its ID from the user's Google Drive.
+  * @param accessToken - The access token of the user
+  * @param fileId - The ID of the file to fetch
+  * @returns 
+  */
+ export const fetchFileById = async (accessToken: string, fileId: string) => {
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/get-file`,
+      {
+        accessToken: accessToken,
+        fileID: fileId,
+      }
+    );
+    return response.data;
+  } catch (e) {
+    console.error(`ERROR: Fetching file of id: ${fileId}:` + e);
+  }
+}
