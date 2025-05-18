@@ -14,8 +14,6 @@ const FilePage = ({ params }: FilePageProps) => {
 
   return (
     <div className="text-slate-900">
-      <h1>Dynamic File Page</h1>
-      <p>This is the content for file: {fileId}</p>
       <View />
     </div>
   );

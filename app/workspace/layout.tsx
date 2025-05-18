@@ -15,8 +15,8 @@ import returnWorkspaceDataInRequiredFormat from "@/lib/formatWorkspace";
 import getCookie from "@/lib/cookies/getCookie";
 import { MoonLoader } from "react-spinners";
 
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { Separator } from "@radix-ui/react-separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { fetchFolderById } from "@/lib/googleDrive";
 
 interface WorkspaceLayoutProps {
@@ -112,9 +112,6 @@ const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
               </Button>
             </Link>
           </div>
-
-          <Separator className="my-4" />
-
           <div className="space-y-1">
             <Link href="/workspace">
               <Button variant="ghost" className="w-full justify-start">
@@ -150,9 +147,6 @@ const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
               )}
             </div>
           </div>
-
-          <Separator className="my-4" />
-
           <div className="space-y-1">
             <Link href="/workspace/import-workspace">
               <Button variant="ghost" className="w-full justify-start">
@@ -181,9 +175,12 @@ const WorkspaceLayout = ({ children }: WorkspaceLayoutProps) => {
         title="Hold and drag to resize the side bar"
         onMouseDown={handleMouseDown}
       />
-      <main id="main-section" style={{ width: `${100 - sideBarWidth}vw` }}>
-        {children}
-      </main>
+      <ScrollArea
+        className="h-screen"
+        style={{ width: `${100 - sideBarWidth}vw` }}
+      >
+        <div className="p-4">{children}</div>
+      </ScrollArea>
     </div>
   );
 };
