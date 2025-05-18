@@ -2,8 +2,9 @@
 
 import { Poppins } from "next/font/google"
 import { SessionProvider } from "next-auth/react"
-import "./globals.css"
 import { AnimatePresence } from "framer-motion"
+
+import "./globals.css"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -11,6 +12,13 @@ const poppins = Poppins({
   variable: "--font-poppins",
 })
 
+/**
+ * RootLayout component
+ * It wraps the entire application with a layout that includes a background, font, and session provider.
+ * The background is a grid pattern, and the font is Poppins.
+ * The session provider is used to manage the authentication state of the user by next-auth.
+ * AnimatePresence is used to animate the children components when they are mounted or unmounted.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

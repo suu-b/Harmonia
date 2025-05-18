@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import ImportWorkSpaceModal from "@/components/ImportWorkspaceModal"
-import getCookie from "@/utils/getCookie"
+import ImportWorkSpaceModal from "./components/ImportWorkspaceModal";
+import getCookie from "@/lib/cookies/getCookie";
 
-const ImportWorkSpacePage: React.FC = () => {
-    const accessToken = getCookie("accessToken")
-    if (!accessToken) {
-        return <p>Loading...</p>; 
-    }
+/**
+ * Component to render the import workspace page.
+ */
+const ImportWorkspacePage: React.FC = () => {
+  const accessToken = getCookie("accessToken");
 
-    return (
-        <>
-            <ImportWorkSpaceModal accessToken={accessToken} />
-        </>
-    )
-}
+  if (!accessToken) {
+    return <p>Loading...</p>;
+  }
 
-export default ImportWorkSpacePage
+  return <ImportWorkSpaceModal accessToken={accessToken} />;
+};
+
+export default ImportWorkspacePage;
