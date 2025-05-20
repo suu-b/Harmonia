@@ -116,7 +116,6 @@ const ToolBar: React.FC = () => {
 
       <Separator orientation="vertical" className="mx-1 h-8" />
 
-      {/* Misc */}
       {[Save, CalendarSync, BookMarked].map((Icon, i) => (
         <Toggle key={i} className="h-8 w-8 data-[state=on]:text-slate-800">
           <Icon size={20} />

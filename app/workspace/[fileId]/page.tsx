@@ -7,7 +7,6 @@ interface FilePageProps {
 
 /**
  * Dummy component to display dynamic content based on the fileId parameter.
- * TODO: Replace with a text editor to display the file content.
  */
 const FilePage = ({ params }: FilePageProps) => {
   const { fileId } = use(params);
