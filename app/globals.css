@@ -2,46 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-poppins: 'Poppins', sans-serif;
-}
-
-body {
-  font-family: var(--font-poppins);
-}
-
-.grid-background {
-  background-image: 
-    linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-.tree {
-  direction: rtl; 
-  overflow-y: auto; 
-  scrollbar-gutter: stable both-edges;
-}
-
-.tree > * {
-  direction: ltr; 
-}
-
-.tree::-webkit-scrollbar {
-  width: 10px;
-  height: 30px;
-}
-
-.tree::-webkit-scrollbar-track {
-  background: #e0e0e0;
-}
-
-.tree::-webkit-scrollbar-thumb {
-  background: #696969;
-  border-radius: 5px;
-}
-
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -98,8 +58,6 @@ body {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
@@ -107,4 +65,62 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+h1.text-3xl.font-bold {
+  font-size: 1.875rem !important;
+  line-height: 2.25rem !important;
+  font-weight: 700 !important;
+}
+
+.grid-background {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.tree {
+  direction: rtl;
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+}
+
+.tree>* {
+  direction: ltr;
+}
+
+.tree::-webkit-scrollbar {
+  width: 10px;
+  height: 30px;
+}
+
+.tree::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+.tree::-webkit-scrollbar-thumb {
+  background: #696969;
+  border-radius: 5px;
+}
+
+.Toggle[data-state="on"] {
+  background-color: var(--violet-6) !important;
+  color: var(--violet-12);
+}
+
+ul.list-disc {
+  list-style-type: disc;
+}
+
+ol.list-decimal {
+  list-style: decimal;
+}
+
+input:focus {
+  outline-width: 0;
+}
+
+[contenteditable="true"]:focus {
+  outline: none;
 }
