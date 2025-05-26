@@ -29,21 +29,82 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Toggle } from "@/components/ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-const ToolBar: React.FC = () => {
+import {
+  toggleAlignments,
+  toggleBlocks,
+  toggleLists,
+  toggleMarks,
+} from "harmonia-text-editor";
+import { Editor } from "slate";
+
+interface ToolBarProps {
+  editor: Editor;
+}
+interface BlockToggleFns {
+  insert: (editor: Editor) => void;
+  toggle: () => void;
+}
+
+/**
+ * ToolBar component for the text editor.
+ * It contains various formatting options like bold, italic, underline, etc.
+ * It also contains options for block types like headings and paragraphs.
+ */
+const ToolBar: React.FC<ToolBarProps> = ({ editor }) => {
   const [alignment, setAlignment] = useState<string | null>(null);
   const [listType, setListType] = useState<string | null>(null);
   const [blockType, setBlockType] = useState<string | null>(null);
 
+  const handleBlockChange = (value: string) => {
+    setBlockType(value);
+
+    const blockMap: Record<string, BlockToggleFns> = {
+      heading1: {
+        insert: toggleBlocks.insertHeading1,
+        toggle: () => toggleBlocks.toggleHeading1(editor),
+      },
+      heading2: {
+        insert: toggleBlocks.insertHeading2,
+        toggle: () => toggleBlocks.toggleHeading2(editor),
+      },
+      heading3: {
+        insert: toggleBlocks.insertHeading3,
+        toggle: () => toggleBlocks.toggleHeading3(editor),
+      },
+      paragraph: {
+        insert: toggleBlocks.insertParagraph,
+        toggle: () => toggleBlocks.toggleParagraph(editor),
+      },
+    };
+
+    const block: BlockToggleFns = blockMap[value];
+    if (!block) return;
+
+    if (!editor.selection) {
+      block.insert(editor);
+    } else {
+      block.toggle();
+    }
+  };
+
+  const alignmentOptions = [
+    { icon: AlignLeft, value: "left" },
+    { icon: AlignCenter, value: "center" },
+    { icon: AlignRight, value: "right" },
+    { icon: AlignJustify, value: "justify" },
+  ];
+
   return (
-    <div className="sticky top-0 z-50 w-full flex items-center justify-center flex-wrap bg-white p-3 rounded border-b border-slate-200">
+    <div className="harmonia-editor sticky border-transparent top-0 z-50 w-full flex items-center justify-center flex-wrap bg-white p-3 rounded border-b border-slate-200">
       <Separator orientation="vertical" className="mx-2 h-8" />
 
-      <Select value={blockType || ""} onValueChange={setBlockType}>
-        <SelectTrigger className="w-[300px] h-8">
+      <Select value={blockType || ""} onValueChange={handleBlockChange}>
+        <SelectTrigger className="w-[300px] h-8 border border-slate-300 shadow hover:bg-slate-100">
           <SelectValue placeholder="Block Type" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white border border-slate-300 shadow">
           <SelectItem value="heading1">Heading 1</SelectItem>
           <SelectItem value="heading2">Heading 2</SelectItem>
           <SelectItem value="heading3">Heading 3</SelectItem>
@@ -59,26 +120,10 @@ const ToolBar: React.FC = () => {
         { icon: Underline, key: "underline" },
         { icon: Highlighter, key: "highlight" },
       ].map(({ icon: Icon, key }) => (
-        <Toggle key={key} className="h-8 w-8 data-[state=on]:text-slate-800">
-          <Icon size={20} />
-        </Toggle>
-      ))}
-
-      <Separator orientation="vertical" className="mx-1 h-8" />
-
-      {[
-        { icon: AlignLeft, value: "left" },
-        { icon: AlignCenter, value: "center" },
-        { icon: AlignRight, value: "right" },
-        { icon: AlignJustify, value: "justify" },
-      ].map(({ icon: Icon, value }) => (
         <Toggle
-          key={value}
-          pressed={alignment === value}
-          onPressedChange={() =>
-            setAlignment((prev) => (prev === value ? null : value))
-          }
-          className={`h-8 w-8 ${alignment === value ? "text-slate-800" : ""}`}
+          key={key}
+          onPressedChange={() => toggleMarks.toggleMark(editor, key)}
+          className="h-8 w-8 hover:bg-slate-100"
         >
           <Icon size={20} />
         </Toggle>
@@ -86,45 +131,85 @@ const ToolBar: React.FC = () => {
 
       <Separator orientation="vertical" className="mx-1 h-8" />
 
-      <Toggle className="h-8 w-8 data-[state=on]:text-slate-800">
+      <ToggleGroup
+        type="single"
+        onValueChange={(value) => {
+          if (value) toggleAlignments.toggleAlignment(editor, value);
+        }}
+        className="flex gap-1"
+      >
+        {alignmentOptions.map(({ icon: Icon, value }) => (
+          <ToggleGroupItem
+            key={value}
+            value={value}
+            className="h-8 w-8 hover:bg-slate-100"
+          >
+            <Icon size={20} />
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
+
+      <Separator orientation="vertical" className="mx-1 h-8" />
+
+      <Toggle
+        onPressedChange={() => toggleBlocks.toggleCodeBlock(editor)}
+        className="h-8 w-8 hover:bg-slate-100"
+      >
         <Code size={20} />
       </Toggle>
 
       <Separator orientation="vertical" className="mx-1 h-8" />
-
-      {[
-        { icon: List, value: "bullet" },
-        { icon: ListOrdered, value: "ordered" },
-      ].map(({ icon: Icon, value }) => (
-        <Toggle
-          key={value}
-          pressed={listType === value}
-          onPressedChange={() =>
-            setListType((prev) => (prev === value ? null : value))
+      <ToggleGroup
+        type="single"
+        value={listType ?? undefined}
+        onValueChange={(value) => {
+          if (value === listType) {
+            setListType(null);
+            toggleLists.toggleList(editor, value);
+          } else {
+            setListType(value);
+            toggleLists.toggleList(editor, value);
           }
-          className={`h-8 w-8 ${listType === value ? "text-slate-800" : ""}`}
-        >
-          <Icon size={20} />
-        </Toggle>
-      ))}
+        }}
+        className="flex gap-1"
+      >
+        {[
+          { icon: List, value: "bulleted-list" },
+          { icon: ListOrdered, value: "numbered-list" },
+        ].map(({ icon: Icon, value }) => (
+          <ToggleGroupItem
+            key={value}
+            value={value}
+            className="h-8 w-8 hover:bg-slate-100"
+          >
+            <Icon size={20} />
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
 
       <Separator orientation="vertical" className="mx-1 h-8" />
 
-      <Toggle className="h-8 w-8 data-[state=on]:text-slate-800">
+      <Toggle
+        onPressedChange={() => toggleBlocks.toggleBorders(editor)}
+        className="h-8 w-8 hover:bg-slate-100"
+      >
         <Square size={20} />
       </Toggle>
 
       <Separator orientation="vertical" className="mx-1 h-8" />
 
       {[Save, CalendarSync, BookMarked].map((Icon, i) => (
-        <Toggle key={i} className="h-8 w-8 data-[state=on]:text-slate-800">
+        <Toggle key={i} className="h-8 w-8 hover:bg-slate-100">
           <Icon size={20} />
         </Toggle>
       ))}
 
       <Separator orientation="vertical" className="mx-2 h-8" />
 
-      <Input placeholder="Search in file 🔍..." className="w-[400px] h-8" />
+      <Input
+        placeholder="Search in file 🔍..."
+        className="w-[400px] h-8 border border-slate-300 shadow"
+      />
 
       <Separator orientation="vertical" className="mx-2 h-8" />
     </div>
