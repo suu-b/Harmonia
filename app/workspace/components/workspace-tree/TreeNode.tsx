@@ -28,7 +28,13 @@ const TreeNode = ({ node }: TreeNodeProps) => {
             )}
           </div>
         )}
-        <Link href={`/workspace/${node.id}`}>
+        <Link
+          href={
+            node.mimetype === "application/vnd.google-apps.folder"
+              ? `/workspace/folder/${node.id}`
+              : `/workspace/file/${node.id}`
+          }
+        >
           <div className="ml-1">{node.name}</div>
         </Link>
       </div>
