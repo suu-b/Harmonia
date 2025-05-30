@@ -1,11 +1,7 @@
 import getCookie from "./cookies/getCookie"
-import { fetchFileById, fetchFolderById } from "@/lib/googleDrive"
 
-interface FileItem  {
-    id: string;
-    name: string;
-    mimeType: string;
-};
+import { fetchFileById, fetchFolderById } from "@/lib/googleDrive"
+import { FinalDataTreeStructure } from "@/types/workspace-data";
 
 interface FileDetailsProps {
     accessToken: string
@@ -14,17 +10,12 @@ interface FileDetailsProps {
 
 interface FolderDetailsProps {
     accessToken: string
-    folderID: string,
+    folderID: string
     folderName: string
+    createdTime: string
+    modifiedTime: string
+    description?: string | null
 }
-
-interface FinalDataTreeStructure {
-    id: string
-    name: string
-    mimetype: string
-    children?: FinalDataTreeStructure[] | null
-}
-
 
 
 /**
@@ -34,7 +25,7 @@ interface FinalDataTreeStructure {
  * @returns 
  */
 const returnWorkspaceDataInRequiredFormat = async (
-    apiResponse: FileItem[]
+    apiResponse: FinalDataTreeStructure[]
 ): Promise<FinalDataTreeStructure[]> => {
     const accessToken = getCookie("accessToken");
 
@@ -42,16 +33,18 @@ const returnWorkspaceDataInRequiredFormat = async (
         console.error("Access token is missing.");
         return [];
     }
-
     const preparedData: (FinalDataTreeStructure | null)[] = await Promise.all(
-        apiResponse.map(packageData =>
-            packageData.mimeType === "application/vnd.google-apps.folder"
+        apiResponse.map(packageData =>{
+            return packageData.mimeType === "application/vnd.google-apps.folder"
                 ? fetchFolderDetails({
                       accessToken,
                       folderID: packageData.id,
-                      folderName: packageData.name
+                      folderName: packageData.name,
+                      createdTime: packageData.createdTime,
+                      modifiedTime: packageData.modifiedTime,
+                      description: packageData.description || null
                   })
-                : null
+                : null}
         )
     );
 
@@ -78,6 +71,9 @@ const fetchFileDetails = async ({
                     file.id,
                     file.name,
                     file.mimeType,
+                    file.createdTime,
+                    file.modifiedTime,
+                    file.description || null,
                     null
                 );
             } else {
@@ -102,7 +98,10 @@ const fetchFileDetails = async ({
 const fetchFolderDetails = async ({
     accessToken,
     folderID,
-    folderName
+    folderName,
+    createdTime,
+    modifiedTime,
+    description = null
 }: FolderDetailsProps): Promise<FinalDataTreeStructure | null> => {
     return fetchFolderById(accessToken, folderID)
         .then(response => {
@@ -111,15 +110,17 @@ const fetchFolderDetails = async ({
                 return null;
             }
 
-            const folder = response.files;
-
+            const folderItems = response.files;
             return Promise.all(
-                folder.map((child: FileItem) => {
+                folderItems.map((child: FinalDataTreeStructure) => {
                     if (child.mimeType === "application/vnd.google-apps.folder") {
                         return fetchFolderDetails({
                             accessToken,
                             folderID: child.id,
-                            folderName: child.name
+                            folderName: child.name,
+                            createdTime: child.createdTime,
+                            modifiedTime: child.modifiedTime,
+                            description: child.description || null
                         });
                     } else {
                         return Promise.resolve(
@@ -127,6 +128,9 @@ const fetchFolderDetails = async ({
                                 child.id,
                                 child.name,
                                 child.mimeType,
+                                child.createdTime,
+                                child.modifiedTime,
+                                description || null,
                                 null
                             )
                         );
@@ -137,7 +141,10 @@ const fetchFolderDetails = async ({
                     folderID,
                     folderName,
                     "application/vnd.google-apps.folder",
-                    children
+                    createdTime,
+                    modifiedTime,
+                    description || null,
+                    children,
                 );
             });
         })
@@ -147,19 +154,25 @@ const fetchFolderDetails = async ({
         });
 };
 
+
 /**
  * Helper to prepare the data tree structure for the final output.
  * @param id - The ID of the file or folder
  * @param name - The name of the file or folder
- * @param mimetype - The MIME type of the file or folder
+ * @param mimeType - The MIME type of the file or folder
  * @param children - The children of the folder (if any)
  * @returns
  */
 const prepareDataTreeStructure = (
     id: string,
     name: string,
-    mimetype: string,
+    mimeType: string,
+    createdTime: string, 
+    modifiedTime: string,
+    description: string | null = null,
     children: FinalDataTreeStructure[] | null = null
 ): FinalDataTreeStructure => {
-    return { id, name, mimetype, children }
+    return { id, name, mimeType, createdTime, modifiedTime, children, description }
 }
+
+

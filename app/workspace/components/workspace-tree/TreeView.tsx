@@ -1,5 +1,7 @@
 import TreeNode from "./TreeNode";
 
+import { FinalDataTreeStructure } from "@/types/workspace-data";
+
 interface TreeViewProps {
   data: FinalDataTreeStructure[];
 }

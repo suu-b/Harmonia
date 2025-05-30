@@ -1,4 +1,4 @@
-import View from "../components/text-editor/View";
+import View from "../../components/text-editor/View";
 import { use } from "react";
 
 interface FilePageProps {

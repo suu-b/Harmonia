@@ -2,6 +2,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { BiSolidDownArrow, BiSolidRightArrow } from "react-icons/bi";
 
+import { FinalDataTreeStructure } from "@/types/workspace-data";
+
 interface TreeNodeProps {
   node: FinalDataTreeStructure;
 }
@@ -28,7 +30,13 @@ const TreeNode = ({ node }: TreeNodeProps) => {
             )}
           </div>
         )}
-        <Link href={`/workspace/${node.id}`}>
+        <Link
+          href={
+            node.mimeType === "application/vnd.google-apps.folder"
+              ? `/workspace/folder/${node.id}`
+              : `/workspace/file/${node.id}`
+          }
+        >
           <div className="ml-1">{node.name}</div>
         </Link>
       </div>
