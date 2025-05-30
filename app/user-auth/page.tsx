@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import { useEffect } from "react";
 import Image from "next/image";
@@ -60,7 +59,7 @@ const UserAuthPage: React.FC = () => {
         {status === "authenticated" ? (
           <Card className="w-fulltext-center p-10">
             <CardContent className="flex flex-col justify-center items-center">
-              <CardHeader className="text-lg tracking-wider text-slate-800">
+              <CardHeader className="text-lg tracking-wider text-center text-slate-800">
                 HARMONIA
               </CardHeader>
               <CardTitle className="text-4xl font-bold my-3">

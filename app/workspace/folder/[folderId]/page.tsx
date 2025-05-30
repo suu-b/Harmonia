@@ -1,3 +1,5 @@
+"use client";
+
 import { use } from "react";
 import FolderMetaFile from "./components/FolderMetaFile";
 
@@ -13,7 +15,7 @@ const FolderPage = ({ params }: FolderPageProps) => {
 
   return (
     <div className="text-slate-900">
-      <FolderMetaFile />
+      <FolderMetaFile folderId={folderId} />
     </div>
   );
 };

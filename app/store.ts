@@ -1,12 +1,14 @@
 import {configureStore} from "@reduxjs/toolkit"
 import editorReducer from "./editorSlice"
+import workspaceDataReducer from "./workspaceDataSlice"
 
 /**
  * Configures the Redux store with the editor slice reducer.
  */
 export const store = configureStore({
     reducer: {
-         editor: editorReducer
+         editor: editorReducer,
+         workspaceData: workspaceDataReducer
     }
 })
 

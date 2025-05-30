@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     }
     try {
         const query = encodeURIComponent(`'${folderID}' in parents`)
-        const response = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name,mimeType,parents)`, {
+        const response = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}&fields=files(id,name,mimeType,parents,createdTime,modifiedTime,description)`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${accessToken}`,

@@ -16,8 +16,9 @@ import getCookie from "@/lib/cookies/getCookie";
 import { MoonLoader } from "react-spinners";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 import { fetchFolderById } from "@/lib/googleDrive";
+
+import { FinalDataTreeStructure } from "@/types/workspace-data";
 
 interface WorkspaceLayoutProps {
   children: ReactNode;

@@ -1,56 +1,35 @@
 "use client";
 
+import { useSelector } from "react-redux";
+import { Search } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Search } from "lucide-react";
+import { RootState } from "@/app/store";
+import { FinalDataTreeStructure } from "@/types/workspace-data";
 
-const FolderMetaFile = () => {
-  const someMetaData = {
-    title: "Folder Metadata",
-    description: "This is a placeholder for folder metadata.",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    listOfItems: [
-      {
-        id: "1",
-        name: "Document1",
-        type: "document",
-        createdAt: new Date().toISOString(),
-        lastModified: new Date().toISOString(),
-      },
-      {
-        id: "2",
-        name: "Directory1",
-        type: "folder",
-        createdAt: new Date().toISOString(),
-        lastModified: new Date().toISOString(),
-      },
-      {
-        id: "3",
-        name: "Document2",
-        type: "document",
-        createdAt: new Date().toISOString(),
-        lastModified: new Date().toISOString(),
-      },
-      {
-        id: "4",
-        name: "Directory2",
-        type: "folder",
-        createdAt: new Date().toISOString(),
-        lastModified: new Date().toISOString(),
-      },
-      {
-        id: "5",
-        name: "Document3",
-        type: "document",
-        createdAt: new Date().toISOString(),
-        lastModified: new Date().toISOString(),
-      },
-    ],
-  };
+interface FolderPageProps {
+  folderId: string;
+}
+
+/**
+ * The component displays the metadata and contents of a specific folder.
+ */
+const FolderMetaFile: React.FC<FolderPageProps> = ({ folderId }) => {
+  const workspaceData = useSelector(
+    (state: RootState) => state.workspaceData.workspaceData
+  );
+  console.log("Workspace Data:");
+  console.log(workspaceData);
+  const folder = workspaceData.find(
+    (item: FinalDataTreeStructure) =>
+      item.id === folderId &&
+      item.mimeType === "application/vnd.google-apps.folder"
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchedQuery, setSearchedQuery] = useState("");
@@ -61,25 +40,36 @@ const FolderMetaFile = () => {
     console.log("Searching for:", searchQuery, "Global:", globalSearch);
   };
 
-  const filteredItems = someMetaData.listOfItems.filter((item) =>
-    item.name.toLowerCase().includes(searchedQuery.toLowerCase())
-  );
+  if (!folder) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-600 text-xl">Folder not found: {folderId}</p>
+      </div>
+    );
+  }
+  console.log("Folder Children:", folder);
+  const filteredItems =
+    folder.children?.filter((item) =>
+      item.name.toLowerCase().includes(searchedQuery.toLowerCase())
+    ) || [];
 
   return (
     <div className="flex flex-col p-6 min-h-screen bg-gray-50">
       <div className="mb-6">
         <h1 className="text-4xl font-bold text-slate-800 mb-1">
-          {someMetaData.title}
+          {folder.name}
         </h1>
-        <p className="text-gray-600">{someMetaData.description}</p>
+        <p className="text-gray-600">
+          {folder.description || "No description available."}
+        </p>
         <div className="flex flex-wrap gap-4 text-sm text-gray-500 mt-3">
           <p>
             <span className="font-semibold">Created At:</span>{" "}
-            {new Date(someMetaData.createdAt).toLocaleString()}
+            {new Date(folder.createdTime).toLocaleString()}
           </p>
           <p>
             <span className="font-semibold">Updated At:</span>{" "}
-            {new Date(someMetaData.updatedAt).toLocaleString()}
+            {new Date(folder.modifiedTime).toLocaleString()}
           </p>
         </div>
       </div>
@@ -121,23 +111,37 @@ const FolderMetaFile = () => {
               key={item.id}
               className="cursor-pointer transition hover:shadow-lg hover:border-blue-400"
             >
-              <CardContent className="p-4 flex flex-col justify-between h-full">
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {item.name}
-                  </h3>
-                  <p className="text-xs text-gray-500 capitalize">
-                    Type: {item.type}
-                  </p>
-                </div>
-                <div className="text-xs text-gray-500 mt-2">
-                  <p>Created: {new Date(item.createdAt).toLocaleString()}</p>
-                  <p>
-                    Last Modified:{" "}
-                    {new Date(item.lastModified).toLocaleString()}
-                  </p>
-                </div>
-              </CardContent>
+              {" "}
+              <Link
+                href={
+                  item.mimeType === "application/vnd.google-apps.folder"
+                    ? `/workspace/folder/${item.id}`
+                    : `/workspace/file/${item.id}`
+                }
+              >
+                <CardContent className="p-4 flex flex-col justify-between h-full">
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">
+                      {item.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 capitalize">
+                      Type:{" "}
+                      {item.mimeType === "application/vnd.google-apps.folder"
+                        ? "folder"
+                        : "document"}
+                    </p>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-2">
+                    <p>
+                      Created: {new Date(item.createdTime).toLocaleString()}
+                    </p>
+                    <p>
+                      Last Modified:{" "}
+                      {new Date(item.modifiedTime).toLocaleString()}
+                    </p>
+                  </div>
+                </CardContent>
+              </Link>
             </Card>
           ))
         ) : (
