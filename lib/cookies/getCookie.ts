@@ -1,3 +1,5 @@
+"use client"
+
 const getCookie = (cookieName: string) => {
     const cookies = document.cookie
     const cookieValue = cookies

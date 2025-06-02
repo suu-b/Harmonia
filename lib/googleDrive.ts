@@ -101,3 +101,31 @@ export const createFolder = async (accessToken: string, folderName: string) => {
     console.error(`ERROR: Fetching file of id: ${fileId}:` + e);
   }
 }
+
+/**
+ * Updates the metadata of a file in the user's Google Drive.
+ * @param accessToken - The access token of the user
+ * @param fileId - The ID of the file to update
+ * @param newName - The new name for the file (optional)
+ * @param description - The new description for the file (optional)
+ * @returns 
+ */
+export const updateFileMetadata = async (accessToken: string, fileId: string, newName: string | null, newDescription: string | null) =>{
+  try {
+    const metadata: { name?: string; description?: string } = {}
+    if (newName) metadata.name = newName
+    if (newDescription) metadata.description = newDescription
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/update-metadata`,
+      {
+        accessToken: accessToken,
+        fileID: fileId,
+        metadata: metadata
+      }
+    );
+    console.log(response)
+    return response.data;
+  } catch (e) {
+    console.error(`ERROR: Updating file of id: ${fileId}:` + e);
+  }
+}
