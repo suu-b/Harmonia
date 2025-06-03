@@ -25,7 +25,6 @@ const WorkspaceTree: React.FC<WorkspaceTreeProps> = ({ data }) => {
     const flatList: FinalDataTreeStructure[] = [];
 
     const traverse = (node: FinalDataTreeStructure) => {
-      console.log("node", node);
       flatList.push(node);
       if (node.children) {
         node.children.forEach(traverse);
