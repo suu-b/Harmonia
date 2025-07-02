@@ -1,0 +1,22 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore build and distribution directories
+build/
+dist/
+
+# Ignore configuration files
+.eslintrc
+.babelrc
+
+# Ignore test files
+__tests__/
+*.test.js
+
+# Ignore public assets
+public/
+assets/
+
+# Ignore generated files
+*.min.js
+*.bundle.js
