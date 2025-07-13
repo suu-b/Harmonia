@@ -1,9 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import { FaGoogle } from 'react-icons/fa';
 import { useState } from 'react';
 import { MoonLoader } from 'react-spinners';
+import Image from 'next/image';
+import { signIn } from 'next-auth/react';
+
 import { Button } from '@/components/ui/button';
 
 const Home: React.FC = () => {
@@ -11,7 +13,7 @@ const Home: React.FC = () => {
 
   const handleGoogleSignIn = () => {
     setIsLoading(true);
-    // signIn('google', { callbackUrl: '/user-auth' });
+    signIn('google', { callbackUrl: '/welcome-user' });
   };
 
   return (
